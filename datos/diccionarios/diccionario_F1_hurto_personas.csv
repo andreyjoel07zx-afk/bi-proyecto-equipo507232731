@@ -1,0 +1,7 @@
+﻿Campo,Tipo,Descripción,Ejemplo,Problema de calidad
+FECHA HECHO,Fecha (texto),Día en que ocurrió el hurto según la denuncia,02/01/2022,Texto dd/mm/aaaa en el CSV del portal; la API entrega 2022-01-02T00:00:00.000
+COD_DEPTO,Texto (2),Código DANE del departamento,05,Valor «SIN ESTABLECER» (365 filas de 2008)
+DEPARTAMENTO,Texto,"Nombre del departamento, en mayúsculas y sin tildes",ATLANTICO,No coincide con DIVIPOLA: «SAN ANDRES ISLAS»
+COD_MUNI,Texto (5),Código DANE del municipio (llave de integración),05001,Valor «SIN ESTABLECER» en lugar de código
+MUNICIPIO,Texto,"Nombre del municipio, sin tildes",MEDELLIN,"Nombres distintos a DIVIPOLA: «CALI», «BOGOTA D.C.»"
+CANTIDAD,Entero,Número de víctimas de hurto a personas ese día en el municipio,27,Agregados atípicos: máximo 718 en una sola fila

@@ -1,0 +1,8 @@
+﻿Campo,Tipo,Descripción,Ejemplo,Problema de calidad
+id_sede,Texto,Identificador de la sede,S01,Ninguno
+nombre_sede,Texto,Nombre comercial de la sede,Sede Medellín,Ninguno
+cod_dane_mpio,Texto,Código DANE del municipio de la sede,5001,Sin cero inicial: «5001» y «8001»
+ciudad,Texto,Ciudad de la sede,Bogotá D.C.,Escritura distinta a F1 y F2
+regional,Texto,Regional comercial de Vigía Segura,Caribe,Ninguno
+fecha_apertura,Fecha (texto),Fecha de apertura de la sede,2018-07-01,Formatos mezclados: «15/03/2016» y «2018-07-01»
+radio_cobertura,Texto,Radio de atención de la sede,50,Unidades distintas: «50 km» y «35000» (metros)

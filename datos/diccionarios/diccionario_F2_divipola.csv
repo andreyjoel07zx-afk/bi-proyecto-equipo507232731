@@ -1,0 +1,8 @@
+﻿Campo,Tipo,Descripción,Ejemplo,Problema de calidad
+cod_dpto,Texto (2),Código DANE del departamento,05,Ninguno detectado
+dpto,Texto,"Nombre oficial del departamento, con tildes",ATLÁNTICO,"Nombre largo distinto a F1: «ARCHIPIÉLAGO DE SAN ANDRÉS, PROVIDENCIA Y SANTA CATALINA»"
+cod_mpio,Texto (5),Código DANE del municipio (llave natural),05001,Ninguno detectado
+nom_mpio,Texto,Nombre oficial del municipio,SANTIAGO DE CALI,"No es único: «LA UNIÓN» aparece 4 veces (05400, 52399, 70400, 76400)"
+tipo_municipio,Texto,"Municipio, Isla o Área no municipalizada",Municipio,18 registros «Área no municipalizada» que no son municipios
+longitud,Texto,Longitud del centroide del municipio,"-75,581775",Número guardado como texto con coma decimal
+latitud,Texto,Latitud del centroide del municipio,"6,246631",Número guardado como texto con coma decimal

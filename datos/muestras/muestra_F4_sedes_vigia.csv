@@ -1,0 +1,6 @@
+﻿id_sede,nombre_sede,cod_dane_mpio,ciudad,regional,fecha_apertura,radio_cobertura
+S01,Sede Principal Bogotá,11001,Bogotá D.C.,Centro,15/03/2016,50
+S02,Sede Medellín,5001,Medellín,Noroccidente,2018-07-01,50
+S03,Sede Cali,76001,Santiago de Cali,Suroccidente,01/02/2019,50 km
+S04,Sede Barranquilla,8001,Barranquilla,Caribe,10/09/2021,40
+S05,Sede Bucaramanga,68001,Bucaramanga,Nororiente,2023-04-17,35000
