@@ -1,0 +1,8 @@
+﻿Campo,Tipo,Descripción,Ejemplo,Problema de calidad
+DP,Texto (2),Código DANE del departamento,76,Encabezado en la fila 8; filas 1 a 7 de título y fila 9 vacía
+DPNOM,Texto,Nombre del departamento,Valle del Cauca,"Escritura distinta a F1 y F2: «Bogotá, D.C.» frente a «BOGOTA D.C.»"
+MPIO,Texto (5),Código DANE del municipio (llave de integración),76001,Ninguno detectado: texto de 5 dígitos con cero inicial
+DPMP,Texto,"Nombre del municipio, en mayúsculas y minúsculas",Cali,Distinto a F2 («SANTIAGO DE CALI») y a F1 («CALI»)
+AÑO,Entero,Año de la proyección (2018 a 2042),2022,Granularidad anual frente a la diaria de F1
+ÁREA GEOGRÁFICA,Texto,"Cabecera Municipal, Centros Poblados y Rural Disperso o Total",Total,Mezcla el total con sus partes (riesgo de doble conteo)
+TOTAL,Entero,"Población proyectada del municipio, año y área",2283342,Cuatro filas de fuente y notas al pie al final de la hoja

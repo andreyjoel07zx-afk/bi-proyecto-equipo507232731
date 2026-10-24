@@ -46,10 +46,11 @@ Pasos:
 | Publicador | DANE |
 | Página | https://www.dane.gov.co/index.php/estadisticas-por-tema/demografia-y-poblacion/proyecciones-de-poblacion |
 | URL de descarga | https://www.dane.gov.co/files/censo2018/proyecciones-de-poblacion/Municipal/PPED-AreaMun-2018-2042_VP.xlsx |
-| Formato | XLSX, hoja `PobMunicipalxÁrea`, encabezado en la fila 8 |
+| Formato | XLSX, hoja `PobMunicipalxÁrea`, encabezado en la fila 8 (columnas DP, DPNOM, MPIO, DPMP, AÑO, ÁREA GEOGRÁFICA, TOTAL); versión actualizada el 30/07/2025 |
+| Fecha de descarga | 23/10/2026 |
 | Archivo | `datos/raw/F3_poblacion_municipal.xlsx` |
 | Periodo | 2018 a 2042 (se usa 2022 a 2025) |
-| Registros | Aprox. 84.200 filas municipio-año-área |
+| Registros | 84.225 filas municipio-año-área (13.476 en 2022-2025); 1.123 municipios |
 | Licencia | Uso libre citando la fuente (términos de uso de dane.gov.co) |
 
 Pasos:
