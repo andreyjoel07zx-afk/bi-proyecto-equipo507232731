@@ -1,71 +1,49 @@
-# bi-proyecto-equipo507232731 · Vigía Segura S.A.S.
+# ETL · Vigía Segura S.A.S. (Entrega 2)
 
-Proyecto final de Business Intelligence · Fundación Universitaria Konrad Lorenz
-Docente: Leandro Pájaro Fuentes
+## Motor y versiones
 
-## Caso
+- Pentaho Data Integration (Spoon) 9.4.0.0-343, con el driver JDBC `postgresql-42.2.23.jar` incluido.
+- Data warehouse en PostgreSQL (Neon, servicio en la nube). Base `neondb`, esquemas `stg` (staging) y `dw` (estrella).
+- Administración y conciliación con DBeaver CE.
 
-Vigía Segura S.A.S. es una empresa de seguridad privada (organización ficticia y verosímil) con cinco sedes en Bogotá, Medellín, Cali, Barranquilla y Bucaramanga. Su gerente comercial no puede decidir **en qué municipios abrir nuevas sedes ni en qué meses reforzar el servicio**, porque las cifras de hurto, la población y los códigos de municipios están en archivos separados que nadie ha integrado.
+## Parámetros de conexión (sin contraseña)
 
-**Pregunta principal (P0):** ¿qué municipios sin sede de Vigía Segura tienen la mayor tasa de hurto a personas por cada 100.000 habitantes entre 2022 y 2025, y cómo evolucionó esa tasa año a año?
+La conexión `dw_neon` de todos los `.ktr` y del `.kjb` se arma con variables. Se definen en `%USERPROFILE%\.kettle\kettle.properties`:
 
-## Integrantes
+```
+DW_HOST=ep-tiny-mud-b61t0hrh.c-2.sa-east-1.aws.neon.tech
+DW_PORT=5432
+DW_DB=neondb
+DW_USER=neondb_owner
+DW_PASSWORD=<cada integrante escribe la suya; nunca se sube al repositorio>
+```
 
-| Nombre | Código |
+La conexión usa `sslmode=require` y `reWriteBatchedInserts=true`.
+
+## Ubicación esperada de las fuentes
+
+Las rutas son relativas al repositorio (`${Internal.Entry.Current.Directory}/../../datos/raw/`):
+
+| Archivo | Fuente |
 |---|---|
-| Laura Juliana López Loaiza | 507252008 |
-| Andrey Joel Ordoñez Romero | 507232731 |
-| Laura Jimena Cardenas Umaña | 507231704 |
+| `datos/raw/F1_hurto_personas.csv` | F1, CSV de datos.gov.co, descomprimido desde `F1_hurto_personas.zip` |
+| `datos/raw/F2_divipola.json` | F2, JSON de la API SODA del DANE |
+| `datos/raw/F3_poblacion_municipal.xlsx` | F3, XLSX del DANE, hoja `PobMunicipalxÁrea` |
+| `datos/raw/F4_sedes_vigia.xlsx` | F4, XLSX interno, hoja `Sedes` |
 
-## Fuentes de datos
+## Orden de ejecución (`etl/trabajos/job_carga_completa.kjb`)
 
-| Id | Fuente | Formato | Origen |
-|---|---|---|---|
-| F1 | Hurto a personas, MinDefensa / Policía Nacional | CSV | [datos.gov.co 4rxi-8m8d](https://www.datos.gov.co/d/4rxi-8m8d) |
-| F2 | DIVIPOLA, códigos de municipios, DANE | JSON (API SODA) | [datos.gov.co gdxc-w37w](https://www.datos.gov.co/d/gdxc-w37w) |
-| F3 | Proyecciones de población municipal por área 2018-2042, DANE | XLSX | [dane.gov.co](https://www.dane.gov.co/index.php/estadisticas-por-tema/demografia-y-poblacion/proyecciones-de-poblacion) |
-| F4 | Maestro de sedes de Vigía Segura | XLSX | **Datos sintéticos** creados por el equipo |
+| # | Entrada del trabajo | Qué hace |
+|---|---|---|
+| 1 | `01_esquemas.sql` | Crea los esquemas `stg` y `dw` |
+| 2 | `02_staging.sql` | Crea las 4 tablas espejo de staging |
+| 3 | `03_tablas_dw.sql` | Crea las 4 dimensiones y la tabla de hechos (PK y FK) |
+| 4 | `04_dim_tiempo.sql` | Pobla `dim_tiempo` 2022-2025 (1.461 días, con festivos de Colombia) |
+| 5 | `t01_dim_municipio.ktr` + `10_dim_municipio.sql` | F2 JSON → staging; código DANE con LPAD, coma decimal → punto, región |
+| 6 | `t02_dim_perfil_poblacional.ktr` + `11_…sql` | F3 XLSX desde la fila 8 → staging; separa 'Total' y 'Cabecera'; 12 perfiles |
+| 7 | `t03_dim_cobertura.ktr` + `12_…sql` | F4 XLSX → staging; LPAD al código, fechas en dos formatos, metros a km, Haversine, SCD 2 |
+| 8 | `t04_fact_hurto_personas.ktr` + `13_…sql` | F1 CSV → staging; descarta 'SIN ESTABLECER' y años fuera de 2022-2025, agrega municipio × día y busca las llaves |
 
-URL exacta, fecha de descarga, licencia y pasos: ver [`datos/descarga.md`](datos/descarga.md).
+Cada transformación lee la fuente original y la carga sin modificar a su tabla `stg`. La entrada SQL que sigue aplica las reglas de limpieza e inserta en `dw`. Las dimensiones se cargan antes que los hechos.
 
-## Herramientas
-
-- Integración (ETL): Pentaho Data Integration (Spoon)
-- Almacén de datos: PostgreSQL 16, administrado con DBeaver
-- Usuario final: Power BI Desktop
-- Modelo predictivo: Python (Jupyter Notebook, pandas, scikit-learn)
-- Diagramas: draw.io
-
-## Estructura del repositorio
-
-```
-bi-proyecto-equipo507232731/
-├── README.md            caso, integrantes, herramientas y cómo reproducir
-├── .gitignore
-├── docs/
-│   ├── entregas/        PDF de cada entrega (E1, E2, E3, final)
-│   └── diagramas/       arquitectura y esquema dimensional: PNG + draw.io
-├── datos/
-│   ├── raw/             fuentes originales
-│   ├── muestras/        20 filas por fuente, en CSV
-│   ├── diccionarios/    un diccionario por fuente
-│   └── descarga.md      URL, fecha y pasos para obtener cada fuente
-├── dw/
-│   ├── ddl/             scripts CREATE TABLE de dimensiones y hechos
-│   └── conciliacion/    consultas de conteo y totales por fuente
-├── etl/
-│   ├── transformaciones/ archivos .ktr de Pentaho
-│   ├── trabajos/        archivos .kjb de Pentaho
-│   └── README.md        orden de ejecución y parámetros
-├── dashboard/           archivo .pbix o enlace publicado, y capturas
-└── modelo/              notebooks de Python del modelo predictivo
-```
-
-## Cómo reproducir
-
-1. Descargar F1, F2 y F3 siguiendo `datos/descarga.md` y guardarlas en `datos/raw/` (F4 ya está incluida).
-2. Crear la base `dw_hurtos` en PostgreSQL y ejecutar los scripts de `dw/ddl/` (Entrega 2).
-3. Ejecutar los trabajos de Pentaho en el orden de `etl/README.md` (Entrega 2).
-4. Validar las cargas con las consultas de `dw/conciliacion/` (Entrega 2).
-5. Abrir el tablero de `dashboard/` en Power BI (Entrega 3).
-6. Ejecutar los notebooks de `modelo/` (entrega final).
+Conciliación: `dw/conciliacion/01_conciliacion_carga.sql`.
