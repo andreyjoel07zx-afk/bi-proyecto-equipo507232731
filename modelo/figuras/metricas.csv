@@ -1,0 +1,4 @@
+Algoritmo,MAE,RMSE,Error total %
+Regresión lineal,9.19,137.33,9.77
+Bosque aleatorio,5.82,92.38,4.29
+Ingenuo (mismo mes año anterior),6.32,102.04,7.73
